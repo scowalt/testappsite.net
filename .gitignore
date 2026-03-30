@@ -6,6 +6,9 @@ node_modules
 # Testing
 coverage
 
+# Astro
+.astro/
+
 # Next.js
 .next/
 out/

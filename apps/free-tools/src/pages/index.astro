@@ -1,0 +1,74 @@
+---
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Free Tools | Test App Site</title>
+    <meta name="description" content="Free tools and utilities" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="antialiased bg-white text-black font-[Geist,sans-serif] min-h-screen">
+    <div class="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
+      <main class="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+        <h1 class="text-4xl font-bold">Random Joke Generator</h1>
+        <p class="text-lg text-gray-600">
+          Click the button to get a random joke!
+        </p>
+
+        <button
+          id="joke-btn"
+          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors"
+        >
+          Get Joke
+        </button>
+
+        <p id="error" class="text-red-500 hidden"></p>
+
+        <div id="joke-card" class="p-4 bg-gray-100 rounded-lg max-w-md hidden">
+          <p id="joke-setup" class="font-medium"></p>
+          <p id="joke-punchline" class="mt-2 text-gray-700"></p>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      const btn = document.getElementById("joke-btn")!;
+      const errorEl = document.getElementById("error")!;
+      const card = document.getElementById("joke-card")!;
+      const setupEl = document.getElementById("joke-setup")!;
+      const punchlineEl = document.getElementById("joke-punchline")!;
+
+      btn.addEventListener("click", async () => {
+        btn.setAttribute("disabled", "");
+        btn.textContent = "Loading...";
+        errorEl.classList.add("hidden");
+
+        try {
+          const res = await fetch(
+            "https://official-joke-api.appspot.com/random_joke"
+          );
+          if (!res.ok) throw new Error("Failed to fetch joke");
+          const data = await res.json();
+
+          setupEl.textContent = data.setup;
+          punchlineEl.textContent = data.punchline;
+          card.classList.remove("hidden");
+        } catch (err) {
+          errorEl.textContent =
+            err instanceof Error ? err.message : "Something went wrong";
+          errorEl.classList.remove("hidden");
+        } finally {
+          btn.removeAttribute("disabled");
+          btn.textContent = "Get Joke";
+        }
+      });
+    </script>
+  </body>
+</html>
