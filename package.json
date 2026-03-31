@@ -4,11 +4,8 @@
   "workspaces": ["apps/*"],
   "scripts": {
     "dev:marketing": "bun run --cwd apps/marketing dev",
-    "dev:free-tools": "bun run --cwd apps/free-tools dev",
     "build:marketing": "bun run --cwd apps/marketing build",
-    "build:free-tools": "bun run --cwd apps/free-tools build",
-    "deploy": "bun run deploy:free-tools && bun run deploy:marketing",
-    "deploy:marketing": "bun run --cwd apps/marketing deploy",
-    "deploy:free-tools": "bun run --cwd apps/free-tools deploy"
+    "deploy": "bun run deploy:marketing",
+    "deploy:marketing": "bun run --cwd apps/marketing deploy"
   }
 }
