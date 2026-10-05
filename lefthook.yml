@@ -2,3 +2,5 @@ pre-commit:
   commands:
     gitleaks:
       run: gitleaks protect --staged --no-banner
+    no-comments:
+      run: uv run --no-project --python 3.14 --with-requirements .comment-policy/requirements.txt python .comment-policy/check.py --staged
