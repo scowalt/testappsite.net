@@ -56,34 +56,54 @@ No additional local-verification or archive exception is defined in this tree.
 
 ## Parent-owned settings, proof, and cutover
 
-1. After separate merge/review, record the existing Actions required checks and
-   repository/deployment settings. Use the supported Woodpecker 3.19 interfaces
-   to select `.woodpecker.yaml`, allow PRs and push/tag hooks, require approval
-   for forks (`require_approval: forks`), and keep
-   `approval_allowed_users: []`. Read back the exact repository timeout as
-   **10 minutes**, matching Actions `timeout-minutes: 10`; timeout is a repository
-   setting, not a YAML key. Keep trusted network, volumes, and security all false.
-   No privileged containers, socket/host mounts, production/publishing/operator
-   credentials, or PR secrets are required. Retain the supported default trusted
-   clone boundary, without expanding its allowlist or credential scope.
-2. Use only the existing CAX11 hel1 ARM64/4 GiB agent, capacity one and 2 GiB job
-   limit. No new capacity or spend. A platform, credential, history, or capacity
-   failure is a blocker, not permission to narrow inputs or add higher trust.
-3. With Actions still enabled, prove a controlled failing PR revision and a
-   corrected passing revision using the native runtime. Record exact SHAs,
-   commands, image/runtime, all 13 tests, full-checkout policy counts, native
-   pipeline/step IDs, GitHub result contexts, and URLs. Verify branch push and
-   tag delivery and fork approval without automatically executing unapproved
-   fork code. Observe actual result contexts; do not pre-create guessed checks.
-4. Only after equivalent hosted proof, replace the old Actions requirement with
-   the observed Woodpecker result, preserving unrelated checks and deployment
-   controllers. Then disable Actions for this repository and update the same PR
-   again to verify Woodpecker runs and no new Actions run starts. Record settings
-   readback and the repository/result in the parent progress list.
+The controlled RED-to-GREEN and same-PR post-disable proof was completed once
+in mission-control PR #29 / MC #26. MC #27 does not require per-target intentional
+failures, marker commits, artificial or extra test PRs, fresh tag/fork test events,
+or a post-disable PR revision. Preserving configured push/tag/PR triggers and fork
+approval is distinct from proving actual execution of this target's PR and main.
 
-For rollback, re-enable the unchanged Actions workflow and restore its recorded
-required check before removing the replacement requirement or deactivating
-Woodpecker. Preserve fork approval and unrelated controller settings. If any
+Use only the existing CAX11 hel1 ARM64/4 GiB agent, capacity one and 2 GiB job
+limit. No new capacity or spend, browser/auth changes, trust expansion, or
+controller changes. A platform, credential, history, or capacity failure is a
+blocker, not permission to narrow inputs or add higher trust.
+
+1. Complete separate reviewed integration, with distinct Standards and Spec
+   reviews pinned to the source and integration commits. Record existing Actions
+   requirements, protections, rules, and repository/deployment settings without
+   changing unrelated requirements or controllers.
+2. The parent safely activates and reads back the supported Woodpecker 3.19
+   settings: `.woodpecker.yaml`, PRs and push/tag hooks enabled,
+   `require_approval: forks`, `approval_allowed_users: []`, and trusted network,
+   volumes, and security all false. Set and read back the exact repository timeout
+   as **10 minutes**, matching Actions `timeout-minutes: 10`; it is not a YAML key.
+   No job secrets, privileged containers, socket/host mounts, or production,
+   publishing, or operator credentials. Retain the supported default trusted clone
+   boundary without expanding its allowlist or credential scope.
+3. Deliver ONE ordinary reviewed PR with Actions still enabled. Prove its exact
+   head SHA through actual native PR clone and `no-comments` execution: both
+   original commands, all 13 tests, full-checkout policy count, pinned image and
+   runtime, Linux ARM64 platform, native pipeline/step IDs and URLs, and matching
+   exact-SHA GitHub success. Record observed result contexts, not guessed checks.
+4. Merge normally using `--match-head-commit` with that reviewed, proven head SHA.
+   Record the actual resulting default-main SHA, tree, parents, and unchanged
+   original Actions workflow blob. Prove native push clone/job execution for that
+   resulting main SHA, both original commands, all 13 tests, policy count, ARM64
+   runtime, and matching exact-SHA GitHub success; PR success alone is insufficient.
+5. Only after both PR and resulting default-main proof, replace corresponding
+   Actions requirements with the observed Woodpecker result before setting only
+   Actions `enabled: false`. Empty requirements/protections/rules make replacement
+   a NOOP; never remove or invent unrelated requirements. Preserve workflow bytes,
+   deployment controllers, and all other settings.
+6. Perform separate fresh GET-only final acceptance of the resulting main identity,
+   native results, matching GitHub successes, requirement/settings readbacks, and
+   Actions disabled state. Record bounded Actions-run absence observations with
+   their revision/time window, not an infinite-future guarantee. Do not generate a
+   fresh post-disable event. Record the repository/result in the parent progress
+   list; source/local checks do not substitute for these live observations.
+
+For rollback, re-enable the unchanged Actions workflow and restore any recorded
+Actions requirement (NOOP if absent) before removing a corresponding replacement
+requirement or deactivating Woodpecker. Preserve fork approval and unrelated controller settings. If any
 proof fails, leave or restore Actions enabled and report the precise blocker.
 Source preparation performs none of these live operations.
 
