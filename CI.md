@@ -1,5 +1,17 @@
 # CI source preparation
 
+## Native Linux routing
+
+The workflow selects `ci_os: linux`, matching the supported Woodpecker 3.19
+agent setting `WOODPECKER_AGENT_LABELS=ci_os=linux`. Before merging this change,
+the parent must configure and read back that label and actual Linux ARM64
+platform on the current agent, then verify the label and Linux AMD64 platform
+on its replacement. Include no other OS or unsupported CPU; retain native platform
+reporting. This routing label is not a security boundary or hardware attestation.
+The original image index supports both targets, without a matrix or emulation.
+ARM64 rollout guidance below is historical, not native AMD64 proof. Commands,
+pins and status layout stay unchanged; actual AMD64 acceptance is separate.
+
 This is the source-only MC #27 replacement for the single job in
 [Comment-free source](.github/workflows/no-comments.yml). Actions remains enabled
 until the parent operator completes native proof and cutover. Local checks and
@@ -17,7 +29,7 @@ uv run --no-project --python 3.14 --with-requirements .comment-policy/requiremen
 uv run --no-project --python 3.14 --with-requirements .comment-policy/requirements.txt python -m unittest discover -s .comment-policy -p 'test_*.py'
 ```
 
-The approved digest-pinned uv image selects Linux ARM64 with uv 0.11.32 and
+The approved digest-pinned uv image supports Linux ARM64 and AMD64 with uv 0.11.32 and
 Python 3.14. The unchanged requirements pin tree-sitter 0.25.2,
 tree-sitter-language-pack 0.13.0, tree-sitter-c-sharp 0.23.5,
 tree-sitter-embedded-template 0.25.0, and tree-sitter-yaml 0.7.2. The existing
