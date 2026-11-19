@@ -6,9 +6,9 @@ compatibility_date = "2024-12-30"
 directory = "./dist"
 
 [[routes]]
-pattern = "testappsite.net/*"
-zone_name = "testappsite.net"
+pattern = "testappsite.net"
+custom_domain = true
 
 [[routes]]
-pattern = "www.testappsite.net/*"
-zone_name = "testappsite.net"
+pattern = "www.testappsite.net"
+custom_domain = true
