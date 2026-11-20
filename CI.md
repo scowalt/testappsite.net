@@ -4,18 +4,17 @@
 
 The workflow selects `ci_os: linux`, matching the supported Woodpecker 3.19
 agent setting `WOODPECKER_AGENT_LABELS=ci_os=linux`. Before merging this change,
-the parent must configure and read back that label and actual Linux ARM64
-platform on the current agent, then verify the label and Linux AMD64 platform
-on its replacement. Include no other OS or unsupported CPU; retain native platform
-reporting. This routing label is not a security boundary or hardware attestation.
-The original image index supports both targets, without a matrix or emulation.
-ARM64 rollout guidance below is historical, not native AMD64 proof. Commands,
-pins and status layout stay unchanged; actual AMD64 acceptance is separate.
+the parent must configure and read back that label and the `linux/amd64`
+platform on the only agent, `woodpecker` (x86-64). Include no other OS or
+unsupported CPU; retain native platform reporting. This routing label is not a
+security boundary or hardware attestation. The original image index includes a
+`linux/amd64` manifest, without a matrix or emulation. Commands, pins and status
+layout stay unchanged.
 
 This is the source-only MC #27 replacement for the single job in
 [Comment-free source](.github/workflows/no-comments.yml). Actions remains enabled
 until the parent operator completes native proof and cutover. Local checks and
-strict lint are not hosted Linux ARM64 acceptance.
+strict lint are not hosted acceptance.
 
 ## Contract
 
@@ -29,7 +28,7 @@ uv run --no-project --python 3.14 --with-requirements .comment-policy/requiremen
 uv run --no-project --python 3.14 --with-requirements .comment-policy/requirements.txt python -m unittest discover -s .comment-policy -p 'test_*.py'
 ```
 
-The approved digest-pinned uv image supports Linux ARM64 and AMD64 with uv 0.11.32 and
+The approved digest-pinned uv image includes a `linux/amd64` manifest with uv 0.11.32 and
 Python 3.14. The unchanged requirements pin tree-sitter 0.25.2,
 tree-sitter-language-pack 0.13.0, tree-sitter-c-sharp 0.23.5,
 tree-sitter-embedded-template 0.25.0, and tree-sitter-yaml 0.7.2. The existing
@@ -74,8 +73,8 @@ failures, marker commits, artificial or extra test PRs, fresh tag/fork test even
 or a post-disable PR revision. Preserving configured push/tag/PR triggers and fork
 approval is distinct from proving actual execution of this target's PR and main.
 
-Use only the existing CAX11 hel1 ARM64/4 GiB agent, capacity one and 2 GiB job
-limit. No new capacity or spend, browser/auth changes, trust expansion, or
+Use only the existing `woodpecker` agent (x86-64, `linux/amd64`), capacity one
+and 2 GiB job limit. No new capacity or spend, browser/auth changes, trust expansion, or
 controller changes. A platform, credential, history, or capacity failure is a
 blocker, not permission to narrow inputs or add higher trust.
 
@@ -94,12 +93,12 @@ blocker, not permission to narrow inputs or add higher trust.
 3. Deliver ONE ordinary reviewed PR with Actions still enabled. Prove its exact
    head SHA through actual native PR clone and `no-comments` execution: both
    original commands, all 13 tests, full-checkout policy count, pinned image and
-   runtime, Linux ARM64 platform, native pipeline/step IDs and URLs, and matching
+   runtime, `linux/amd64` platform, native pipeline/step IDs and URLs, and matching
    exact-SHA GitHub success. Record observed result contexts, not guessed checks.
 4. Merge normally using `--match-head-commit` with that reviewed, proven head SHA.
    Record the actual resulting default-main SHA, tree, parents, and unchanged
    original Actions workflow blob. Prove native push clone/job execution for that
-   resulting main SHA, both original commands, all 13 tests, policy count, ARM64
+   resulting main SHA, both original commands, all 13 tests, policy count, `linux/amd64`
    runtime, and matching exact-SHA GitHub success; PR success alone is insufficient.
 5. Only after both PR and resulting default-main proof, replace corresponding
    Actions requirements with the observed Woodpecker result before setting only
